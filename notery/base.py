@@ -45,13 +45,22 @@ class ZMQProcess (multiprocessing.Process):
 
         return (s, sock_addr)
 
+    def run(self):
+        self.setup()
+        self.local_run()
+        self.loop.start()
+
+    def local_run(self):
+        pass
+
 class MessageHandler (object):
 
     def deserialize(self, data):
         return json.loads(data)
 
     def __call__ (self, msg):
+        print 'MSG:', msg
         msgtype, data = msg
         data = self.deserialize(data)
-        getattr(self, 'handle_%s' % msgtype)(data)
+        return getattr(self, 'handle_%s' % msgtype)(data)
 

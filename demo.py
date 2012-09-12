@@ -32,15 +32,9 @@ class DemoApp(ZMQProcess):
         print 'SEND PING'
         self.pub.send_multipart(['ping', json.dumps(['ping', time.time()])])
 
-    def run(self):
-        print 'RUN'
-        self.setup()
-
+    def local_run(self):
         print 'START HEARTBEAT'
         self.heartbeat.start()
-
-        print 'START LOOP'
-        self.loop.start()
 
     def stop(self):
         self.heartbeat.stop()
