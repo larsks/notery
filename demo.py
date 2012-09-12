@@ -14,7 +14,7 @@ from notery.base import ZMQProcess, MessageHandler
 class DemoHandler (MessageHandler):
 
     def handle_ping (self, msg):
-        print 'PING', msg
+        print 'RECEIVE PING', msg
 
 class DemoApp(ZMQProcess):
     def __init__ (self):
@@ -42,10 +42,6 @@ class DemoApp(ZMQProcess):
 
         print 'START LOOP'
         self.loop.start()
-
-        print 'STARTED'
-        print self.loop
-        print self.heartbeat
 
     def stop(self):
         self.heartbeat.stop()
