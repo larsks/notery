@@ -47,10 +47,14 @@ class ZMQProcess (multiprocessing.Process):
 
 class MessageHandler (object):
 
-    def deserialize(self, msg):
-        return json.loads(msg[0])
+    def deserialize(self, data):
+        return json.loads(data)
 
     def __call__ (self, msg):
-        method, data = self.deserialize(msg)
-        getattr(self, 'handle_%s' % method)(data)
+        msgtype, data = msg
+        print 'msgtype:', msgtype
+        print 'data 1:', data
+        data = self.deserialize(data)
+        print 'data 2:', data
+        getattr(self, 'handle_%s' % msgtype)(data)
 

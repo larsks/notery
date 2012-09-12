@@ -13,8 +13,8 @@ from notery.base import ZMQProcess, MessageHandler
 
 class DemoHandler (MessageHandler):
 
-    def handle_ping (self, msg):
-        print 'RECEIVE PING', msg
+    def handle_ping (self, data):
+        print 'RECEIVE PING', data
 
 class DemoApp(ZMQProcess):
     def __init__ (self):
@@ -31,7 +31,7 @@ class DemoApp(ZMQProcess):
 
     def ping(self):
         print 'SEND PING'
-        self.pub.send(json.dumps(['ping', time.time()]))
+        self.pub.send_multipart(['ping', json.dumps(['ping', time.time()])])
 
     def run(self):
         print 'RUN'
