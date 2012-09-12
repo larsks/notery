@@ -24,10 +24,9 @@ class DemoApp(ZMQProcess):
         super(DemoApp, self).setup()
 
         self.pub, self.pub_addr = self.stream(zmq.PUB, 'tcp://*:%(port)s', True)
-        self.sub, sub_addr = self.stream(zmq.SUB, self.pub_addr, False)
+        self.sub, sub_addr = self.stream(zmq.SUB, self.pub_addr, False,
+                callback=DemoHandler())
         self.heartbeat = PeriodicCallback(self.ping, 1000, self.loop)
-
-        self.sub.on_recv(DemoHandler())
 
     def ping(self):
         print 'SEND PING'
@@ -63,5 +62,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-
 
