@@ -52,9 +52,6 @@ class MessageHandler (object):
 
     def __call__ (self, msg):
         msgtype, data = msg
-        print 'msgtype:', msgtype
-        print 'data 1:', data
         data = self.deserialize(data)
-        print 'data 2:', data
         getattr(self, 'handle_%s' % msgtype)(data)
 
