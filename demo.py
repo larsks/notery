@@ -5,6 +5,7 @@ import sys
 import argparse
 import json
 import time
+import urlparse
 
 import zmq
 from zmq.eventloop.ioloop import PeriodicCallback
@@ -23,7 +24,8 @@ class DemoApp(ZMQProcess):
     def setup(self):
         super(DemoApp, self).setup()
 
-        self.pub, self.pub_addr = self.stream(zmq.PUB, 'tcp://*:%(port)s', True)
+        self.pub, self.pub_addr = self.stream(zmq.PUB, 'tcp://127.0.0.1:%(port)s', True)
+
         self.sub, sub_addr = self.stream(zmq.SUB, self.pub_addr, False,
                 callback=DemoHandler())
         self.heartbeat = PeriodicCallback(self.ping, 1000, self.loop)
