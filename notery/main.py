@@ -94,15 +94,20 @@ class Notary (ZMQProcess):
         self.loop.stop()
 
     def publish(self, note):
-        note = Note(note)
-
         if not 'tag' in note or not 'id' in note:
             raise InvalidNotificationError(
                     'Notifications must have both tag and id.')
 
-        if 'lid' in note:
+        note = Note(**note)
+
+        if 'lid' in note and note['lid'] in self.notes_by_lid:
             lid = note['lid']
             self.log.debug('updating notification lid = %s' % lid)
+        elif (note['id'], note['tag']) in self.notes_by_rid:
+            lid = self.notes_by_rid[(note['id'], note['tag'])]['lid']
+            self.log.debug(
+                    'updating notification lid = %s (from tag, id = %s, %s)' % (
+                        lid, note['id'], note['tag']))
         else:
             lid = self.notid
             self.notid += 1
