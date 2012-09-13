@@ -33,20 +33,18 @@ class RepStreamHandler (MessageHandler):
 
     def __call__ (self, *args, **kwargs):
         try:
-            msgtype, data = super(RepStreamHandler, self).__call__(*args, **kwargs)
+            try:
+                msgtype, data = super(RepStreamHandler, self).__call__(*args, **kwargs)
+            except AttributeError:
+                raise NoteryProtocolError('Unimplemented message type.')
             self.log.debug('received: %s' % msgtype)
             self.reply(msgtype, data)
         except NoteryError, detail:
-            self.reply('error', {'message': str(detail)})
-        except AttributeError:
             self.reply('error', {
-                'message': 'Unknown message type',
+                'message': str(detail),
+                'id': detail.id,
+                'description': detail.description,
                 })
-        except:
-            self.reply('error', {
-                'message': 'Unexpected application error',
-                })
-            raise
 
     def reply(self, msgtype, data):
         self.parent.s_rep.send_multipart(
