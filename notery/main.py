@@ -10,20 +10,16 @@ import weakref
 import zmq
 
 from base import ZMQProcess, MessageHandler
+from errors import *
 
 DEFAULT_SOCKET_URL = 'tcp://*:2138'
 
-class NoteryError(Exception):
-    pass
-
-class InvalidNotificationError (NoteryError):
-    pass
-
-class UnknownNotificationError (NoteryError):
-    pass
-
 class Note(dict):
-    pass
+    def __init__(self, id, tag, **kwargs):
+        super(Note, self).__init__(**kwargs)
+
+        self['id'] = id
+        self['tag'] = tag
 
 class RepStreamHandler (MessageHandler):
     def __init__(self, parent):
